@@ -263,7 +263,14 @@ public class Main extends JFrame implements ActionListener, ItemListener {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-
+    void activatehex(boolean b) {
+        bA.setEnabled(b);
+        bB.setEnabled(b);
+        bC.setEnabled(b);
+        bD.setEnabled(b);
+        bE.setEnabled(b);
+        bF.setEnabled(b);
+    }
 
     void activateP2P3(boolean v) {
         b0.setEnabled(v);
@@ -341,8 +348,88 @@ public class Main extends JFrame implements ActionListener, ItemListener {
         b2ndF.setEnabled(v);
     }
 
+    int detBaseSource() {
+        if (dec) return 10;
+        else if (bin) return 2;
+        else if (oct) return 8;
+        else return 16;
+    }
 
-
+    int detBaseDestination(Object src) {
+        if (src == Dec) {
+            dec = true;
+            bin = false;
+            oct = false;
+            hex = false;
+            activatehex(false);
+            activateOp(true);
+            b0.setEnabled(true);
+            b1.setEnabled(true);
+            b2.setEnabled(true);
+            b3.setEnabled(true);
+            b4.setEnabled(true);
+            b5.setEnabled(true);
+            b6.setEnabled(true);
+            b7.setEnabled(true);
+            b8.setEnabled(true);
+            b9.setEnabled(true);
+            return 10;
+        } else if (src == Bin) {
+            dec = false;
+            bin = true;
+            oct = false;
+            hex = false;
+            activatehex(false);
+            activateOp(false);
+            b0.setEnabled(true);
+            b1.setEnabled(true);
+            b2.setEnabled(false);
+            b3.setEnabled(false);
+            b4.setEnabled(false);
+            b5.setEnabled(false);
+            b6.setEnabled(false);
+            b7.setEnabled(false);
+            b8.setEnabled(false);
+            b9.setEnabled(false);
+            return 2;
+        } else if (src == Oct) {
+            dec = false;
+            bin = false;
+            oct = true;
+            hex = false;
+            activatehex(false);
+            activateOp(false);
+            b0.setEnabled(true);
+            b1.setEnabled(true);
+            b2.setEnabled(true);
+            b3.setEnabled(true);
+            b4.setEnabled(true);
+            b5.setEnabled(true);
+            b6.setEnabled(true);
+            b7.setEnabled(true);
+            b8.setEnabled(false);
+            b9.setEnabled(false);
+            return 8;
+        } else {
+            dec = false;
+            bin = false;
+            oct = false;
+            hex = true;
+            activatehex(true);
+            activateOp(false);
+            b0.setEnabled(true);
+            b1.setEnabled(true);
+            b2.setEnabled(true);
+            b3.setEnabled(true);
+            b4.setEnabled(true);
+            b5.setEnabled(true);
+            b6.setEnabled(true);
+            b7.setEnabled(true);
+            b8.setEnabled(true);
+            b9.setEnabled(true);
+            return 16;
+        }
+    }
 
     int conversionCarct(char c) {
         if (c == 'F') return 15;
@@ -512,6 +599,7 @@ public class Main extends JFrame implements ActionListener, ItemListener {
             nAr = false;
             nCr = false;
             activateP2P3(true);
+            activatehex(false);
             Dec.setSelected(true);
             virg = false;
             txt.setBackground(Color.black);
@@ -523,6 +611,35 @@ public class Main extends JFrame implements ActionListener, ItemListener {
         else if (src == bcl)
             txt.setText(txt.getText().substring(0, txt.getText().length() - 1));
 
+            ////////////*********Multiplication********//////////////
+        else if (src == bMult) {
+            try {
+                if (init || op) {
+                    xp = (Double.parseDouble(txt.getText()));
+                    init = false;
+                    virg = false;
+                    txt.setText("" + xp);
+                } else {
+                    Resultat();
+                    xp = (Double.parseDouble(txt.getText()));
+                }
+                op = true;
+                mult = true;
+                div = false;
+                som = false;
+                soust = false;
+                YX = false;
+                nAr = false;
+                nCr = false;
+                X1Y = true;
+            } catch (NumberFormatException execp) {
+                txt.setBackground(Color.LIGHT_GRAY);
+                txt.setForeground(Color.RED);
+                txt.setText("ERROR :  CONVERTION  AVEC  VERGULE  FLOTTANTE  NON  SUPPORTEE ");
+                activateP2P3(false);
+            }
+        }
+        ////////////*******Division******////////////
         else if (src == bDiv) {
             try {
                 if (init || op) {
@@ -578,7 +695,34 @@ public class Main extends JFrame implements ActionListener, ItemListener {
                 activateP2P3(false);
             }
         }
-
+        ////////////////************Soustraction***********//////////////////
+        else if (src == bSoust) {
+            try {
+                if (init || op) {
+                    xs = (Double.parseDouble(txt.getText()));
+                    init = false;
+                    virg = false;
+                    txt.setText("" + xs);
+                } else {
+                    Resultat();
+                    xs = (Double.parseDouble(txt.getText()));
+                }
+                op = true;
+                mult = false;
+                div = false;
+                som = false;
+                soust = true;
+                YX = false;
+                nAr = false;
+                nCr = false;
+                X1Y = true;
+            } catch (NumberFormatException execp) {
+                txt.setBackground(Color.LIGHT_GRAY);
+                txt.setForeground(Color.RED);
+                txt.setText("ERROR :  CONVERTION  AVEC  VERGULE  FLOTTANTE  NON  SUPPORTEE ");
+                activateP2P3(false);
+            }
+        }
         //////////////////**************Resultat*************//////////////////
         else if (e.getSource() == bRes) {
             Resultat();
@@ -705,6 +849,30 @@ public class Main extends JFrame implements ActionListener, ItemListener {
                 txt.setText(" ERROR!!  RULE  :  \"  X  DOIT  ETRE  >  A  ZERO  \" ");
                 activateP2P3(false);
             }
+        } else if (src == bRand) {
+            double x = Double.parseDouble(txt.getText());
+            double res = Math.random();
+            txt.setText("" + res);
+        } else if (src == bnAr) {
+            aux = Double.parseDouble(txt.getText());
+            nAr = true;
+            YX = false;
+            init = false;
+            op = true;
+            mult = false;
+            div = false;
+            som = false;
+            soust = false;
+        } else if (src == bnCr) {
+            aux = Double.parseDouble(txt.getText());
+            nCr = true;
+            YX = false;
+            init = false;
+            op = true;
+            mult = false;
+            div = false;
+            som = false;
+            soust = false;
         }
         /////////************FIN des Fonctions Scientifiques********/////////
 
@@ -735,8 +903,19 @@ public class Main extends JFrame implements ActionListener, ItemListener {
             activateOp(false);
             String dep = txt.getText();
             try {
-                String s = null;
+                String s = fromDec(dep, detBaseDestination(srci));
                 txt.setText(s);
+            } catch (NumberFormatException e) {
+                txt.setBackground(Color.LIGHT_GRAY);
+                txt.setForeground(Color.RED);
+                txt.setText("ERROR :  CONVERTION  AVEC  VERGULE  FLOTTANTE  NON  SUPPORTEE  ");
+                activateP2P3(false);
+            }
+        } else if (bin || oct || hex) {
+            try {
+                int x = toDec(txt.getText(), detBaseSource());
+                String s = "" + x;
+                txt.setText(fromDec(s, detBaseDestination(srci)));
             } catch (NumberFormatException e) {
                 txt.setBackground(Color.LIGHT_GRAY);
                 txt.setForeground(Color.RED);
